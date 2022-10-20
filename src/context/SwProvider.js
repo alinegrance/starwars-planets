@@ -4,6 +4,7 @@ import swContext from './swContext';
 
 function SwProvider({ children }) {
   const [planets, setPlanets] = useState([]);
+  const [planetName, setPlanetName] = useState('');
 
   useEffect(() => {
     async function swApiCall() {
@@ -20,10 +21,17 @@ function SwProvider({ children }) {
     swApiCall();
   }, []);
 
+  const getPlanetName = ({ target: { value } }) => {
+    setPlanetName(value);
+  };
+
   const store = useMemo(
     () => ({
-      planets }),
-    [planets],
+      planets,
+      planetName,
+      getPlanetName,
+    }),
+    [planets, planetName],
   );
 
   return (
