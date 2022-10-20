@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import swContext from '../context/swContext';
 
 const newFilter = (id, column, comparison, value) => (
@@ -15,24 +15,35 @@ const newFilter = (id, column, comparison, value) => (
         return false;
       }
     },
+    params: { column, comparison, value },
   }
 );
 
-function NumberFilter() {
-  const { columnFilter,
-    getColumnFilter,
-    comparisonFilter,
-    getComparisonFilter,
-    numberFilter,
-    getNumberFilter,
-    // turnColumnFilterOn,
+function ColumnFilter() {
+  const [columnFilter, setColumnFilter] = useState('population');
+  const [comparisonFilter, setComparisonFilter] = useState('maior que');
+  const [numberFilter, setNumberFilter] = useState('0');
+  const [columnOptions, setColumnOptions] = useState(['population',
+    'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
+
+  const getColumnFilter = ({ target: { value } }) => {
+    setColumnFilter(value);
+  };
+
+  const getComparisonFilter = ({ target: { value } }) => {
+    setComparisonFilter(value);
+  };
+
+  const getNumberFilter = ({ target: { value } }) => {
+    setNumberFilter(value);
+  };
+  const {
     addNewFilter,
     id } = useContext(swContext);
 
   const submitHandler = (event) => {
     event.preventDefault();
-    // turnColumnFilterOn();
-
+    setColumnOptions((prevState) => prevState.filter((opt) => opt !== columnFilter));
     addNewFilter(newFilter(id, columnFilter, comparisonFilter, numberFilter));
   };
 
@@ -45,11 +56,11 @@ function NumberFilter() {
           value={ columnFilter }
           onChange={ getColumnFilter }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          {
+            columnOptions.map((option) => (
+              <option key={ option } value={ option }>{option}</option>
+            ))
+          }
         </select>
       </label>
       <label htmlFor="comparison">
@@ -83,4 +94,4 @@ function NumberFilter() {
   );
 }
 
-export default NumberFilter;
+export default ColumnFilter;

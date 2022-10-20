@@ -1,12 +1,12 @@
 import React from 'react';
 import NameFilter from './NameFilter';
-import NumberFilter from './NumberFilter';
+import ColumnFilter from './ColumnFilter';
 
 function Filters() {
   return (
     <div>
       <NameFilter />
-      <NumberFilter />
+      <ColumnFilter />
     </div>
 
   );

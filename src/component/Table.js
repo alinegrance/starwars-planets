@@ -4,10 +4,6 @@ import swContext from '../context/swContext';
 function Table() {
   const { planets,
     nameFilter,
-    // columnFilter,
-    // comparisonFilter,
-    // numberFilter,
-    // columnFilterOn,
     filters } = useContext(swContext);
 
   const planetNameFilter = (planet) => planet.name.toLowerCase()
@@ -16,23 +12,6 @@ function Table() {
   const filterByColumn = (planet) => filters
     .map(({ f }) => f(planet))
     .every((res) => res === true);
-
-  // const columnFilterSetup = (planet) => {
-  //   if (columnFilterOn) {
-  //     switch (comparisonFilter) {
-  //     case 'maior que':
-  //       return Number(planet[columnFilter]) > Number(numberFilter);
-  //     case 'menor que':
-  //       return Number(planet[columnFilter]) < Number(numberFilter);
-  //     case 'igual a':
-  //       return Number(planet[columnFilter]) === Number(numberFilter);
-  //     default:
-  //       return false;
-  //     }
-  //   } else {
-  //     return true;
-  //   }
-  // };
 
   return (
     <table>
