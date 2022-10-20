@@ -9,6 +9,8 @@ function SwProvider({ children }) {
   const [comparisonFilter, setComparisonFilter] = useState('maior que');
   const [numberFilter, setNumberFilter] = useState('0');
   const [columnFilterOn, setColumnFilterOn] = useState(false);
+  const [filters, setFilters] = useState([]);
+  const [id, setId] = useState(0);
 
   useEffect(() => {
     async function swApiCall() {
@@ -47,6 +49,11 @@ function SwProvider({ children }) {
 
   const turnColumnFilterOn = () => setColumnFilterOn(true);
 
+  const addNewFilter = (newFilter) => {
+    setFilters((prevFilters) => [...prevFilters, newFilter]);
+    setId((prevId) => prevId + 1);
+  };
+
   const store = useMemo(
     () => ({
       planets,
@@ -60,8 +67,12 @@ function SwProvider({ children }) {
       getNumberFilter,
       columnFilterOn,
       turnColumnFilterOn,
+      addNewFilter,
+      filters,
+      id,
     }),
-    [planets, nameFilter, columnFilter, comparisonFilter, numberFilter, columnFilterOn],
+    [planets, nameFilter, columnFilter, comparisonFilter, numberFilter, columnFilterOn,
+      filters, id],
   );
 
   return (

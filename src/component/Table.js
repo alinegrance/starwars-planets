@@ -4,30 +4,35 @@ import swContext from '../context/swContext';
 function Table() {
   const { planets,
     nameFilter,
-    columnFilter,
-    comparisonFilter,
-    numberFilter,
-    columnFilterOn } = useContext(swContext);
+    // columnFilter,
+    // comparisonFilter,
+    // numberFilter,
+    // columnFilterOn,
+    filters } = useContext(swContext);
 
   const planetNameFilter = (planet) => planet.name.toLowerCase()
     .includes(nameFilter.toLowerCase());
 
-  const columnFilterSetup = (planet) => {
-    if (columnFilterOn) {
-      switch (comparisonFilter) {
-      case 'maior que':
-        return Number(planet[columnFilter]) > Number(numberFilter);
-      case 'menor que':
-        return Number(planet[columnFilter]) < Number(numberFilter);
-      case 'igual a':
-        return Number(planet[columnFilter]) === Number(numberFilter);
-      default:
-        return false;
-      }
-    } else {
-      return true;
-    }
-  };
+  const filterByColumn = (planet) => filters
+    .map(({ f }) => f(planet))
+    .every((res) => res === true);
+
+  // const columnFilterSetup = (planet) => {
+  //   if (columnFilterOn) {
+  //     switch (comparisonFilter) {
+  //     case 'maior que':
+  //       return Number(planet[columnFilter]) > Number(numberFilter);
+  //     case 'menor que':
+  //       return Number(planet[columnFilter]) < Number(numberFilter);
+  //     case 'igual a':
+  //       return Number(planet[columnFilter]) === Number(numberFilter);
+  //     default:
+  //       return false;
+  //     }
+  //   } else {
+  //     return true;
+  //   }
+  // };
 
   return (
     <table>
@@ -50,7 +55,7 @@ function Table() {
       </thead>
       <tbody>
         {
-          planets?.filter(planetNameFilter).filter(columnFilterSetup).map((planet) => (
+          planets?.filter(planetNameFilter).filter(filterByColumn).map((planet) => (
             <tr key={ planet.name }>
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>

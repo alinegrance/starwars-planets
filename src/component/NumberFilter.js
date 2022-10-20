@@ -1,6 +1,23 @@
 import React, { useContext } from 'react';
 import swContext from '../context/swContext';
 
+const newFilter = (id, column, comparison, value) => (
+  { id,
+    f: (planet) => {
+      switch (comparison) {
+      case 'maior que':
+        return Number(planet[column]) > Number(value);
+      case 'menor que':
+        return Number(planet[column]) < Number(value);
+      case 'igual a':
+        return Number(planet[column]) === Number(value);
+      default:
+        return false;
+      }
+    },
+  }
+);
+
 function NumberFilter() {
   const { columnFilter,
     getColumnFilter,
@@ -8,11 +25,15 @@ function NumberFilter() {
     getComparisonFilter,
     numberFilter,
     getNumberFilter,
-    turnColumnFilterOn } = useContext(swContext);
+    // turnColumnFilterOn,
+    addNewFilter,
+    id } = useContext(swContext);
 
   const submitHandler = (event) => {
     event.preventDefault();
-    turnColumnFilterOn();
+    // turnColumnFilterOn();
+
+    addNewFilter(newFilter(id, columnFilter, comparisonFilter, numberFilter));
   };
 
   return (
