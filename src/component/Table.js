@@ -2,10 +2,32 @@ import React, { useContext } from 'react';
 import swContext from '../context/swContext';
 
 function Table() {
-  const { planets, planetName } = useContext(swContext);
+  const { planets,
+    nameFilter,
+    columnFilter,
+    comparisonFilter,
+    numberFilter,
+    columnFilterOn } = useContext(swContext);
 
-  const nameFilter = (planet) => planet.name.toLowerCase()
-    .includes(planetName.toLowerCase());
+  const planetNameFilter = (planet) => planet.name.toLowerCase()
+    .includes(nameFilter.toLowerCase());
+
+  const columnFilterSetup = (planet) => {
+    if (columnFilterOn) {
+      switch (comparisonFilter) {
+      case 'maior que':
+        return Number(planet[columnFilter]) > Number(numberFilter);
+      case 'menor que':
+        return Number(planet[columnFilter]) < Number(numberFilter);
+      case 'igual a':
+        return Number(planet[columnFilter]) === Number(numberFilter);
+      default:
+        return false;
+      }
+    } else {
+      return true;
+    }
+  };
 
   return (
     <table>
@@ -28,7 +50,7 @@ function Table() {
       </thead>
       <tbody>
         {
-          planets?.filter(nameFilter).map((planet) => (
+          planets?.filter(planetNameFilter).filter(columnFilterSetup).map((planet) => (
             <tr key={ planet.name }>
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>

@@ -1,20 +1,14 @@
 import React from 'react';
 import NameFilter from './NameFilter';
+import NumberFilter from './NumberFilter';
 
 function Filters() {
   return (
-    <NameFilter />
-    // <form>
-    //   <label htmlFor="column">
-    //     <select data-testid="column-filter" id="column">
-    //       <option>opt</option>
-    //       <option>opt</option>
-    //       <option>opt</option>
-    //       <option>opt</option>
-    //       <option>opt</option>
-    //     </select>
-    //   </label>
-    // </form>
+    <div>
+      <NameFilter />
+      <NumberFilter />
+    </div>
+
   );
 }
 

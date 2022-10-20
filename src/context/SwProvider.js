@@ -4,7 +4,11 @@ import swContext from './swContext';
 
 function SwProvider({ children }) {
   const [planets, setPlanets] = useState([]);
-  const [planetName, setPlanetName] = useState('');
+  const [nameFilter, setNameFilter] = useState('');
+  const [columnFilter, setColumnFilter] = useState('population');
+  const [comparisonFilter, setComparisonFilter] = useState('maior que');
+  const [numberFilter, setNumberFilter] = useState('0');
+  const [columnFilterOn, setColumnFilterOn] = useState(false);
 
   useEffect(() => {
     async function swApiCall() {
@@ -21,17 +25,43 @@ function SwProvider({ children }) {
     swApiCall();
   }, []);
 
-  const getPlanetName = ({ target: { value } }) => {
-    setPlanetName(value);
+  // const getFilter = (value, setFilter) => {
+  //   setFilter(value);
+  // }; ------> generic function???
+
+  const getNameFilter = ({ target: { value } }) => {
+    setNameFilter(value);
   };
+
+  const getColumnFilter = ({ target: { value } }) => {
+    setColumnFilter(value);
+  };
+
+  const getComparisonFilter = ({ target: { value } }) => {
+    setComparisonFilter(value);
+  };
+
+  const getNumberFilter = ({ target: { value } }) => {
+    setNumberFilter(value);
+  };
+
+  const turnColumnFilterOn = () => setColumnFilterOn(true);
 
   const store = useMemo(
     () => ({
       planets,
-      planetName,
-      getPlanetName,
+      nameFilter,
+      getNameFilter,
+      columnFilter,
+      getColumnFilter,
+      comparisonFilter,
+      getComparisonFilter,
+      numberFilter,
+      getNumberFilter,
+      columnFilterOn,
+      turnColumnFilterOn,
     }),
-    [planets, planetName],
+    [planets, nameFilter, columnFilter, comparisonFilter, numberFilter, columnFilterOn],
   );
 
   return (
