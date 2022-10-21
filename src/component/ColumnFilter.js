@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import swContext from '../context/swContext';
 
 const newFilter = (id, column, comparison, value) => (
@@ -26,6 +26,10 @@ function ColumnFilter() {
   const [columnOptions, setColumnOptions] = useState(['population',
     'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
 
+  useEffect(() => {
+    setColumnFilter(columnOptions[0] || null);
+  }, [columnOptions]);
+
   const getColumnFilter = ({ target: { value } }) => {
     setColumnFilter(value);
   };
@@ -43,54 +47,65 @@ function ColumnFilter() {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    setColumnOptions((prevState) => prevState.filter((opt) => opt !== columnFilter));
+
+    setColumnOptions((prevState) => {
+      console.log(columnFilter);
+      return prevState.filter((opt) => opt !== columnFilter);
+    });
+
     addNewFilter(newFilter(id, columnFilter, comparisonFilter, numberFilter));
   };
 
+  console.log(columnOptions.length);
   return (
-    <form onSubmit={ submitHandler }>
-      <label htmlFor="column">
-        <select
-          data-testid="column-filter"
-          id="column"
-          value={ columnFilter }
-          onChange={ getColumnFilter }
-        >
-          {
-            columnOptions.map((option) => (
-              <option key={ option } value={ option }>{option}</option>
-            ))
-          }
-        </select>
-      </label>
-      <label htmlFor="comparison">
-        <select
-          data-testid="comparison-filter"
-          id="comparison"
-          value={ comparisonFilter }
-          onChange={ getComparisonFilter }
-        >
-          <option value="maior que">maior que</option>
-          <option value="menor que">menor que</option>
-          <option value="igual a">igual a</option>
-        </select>
-      </label>
-      <label htmlFor="number">
-        <input
-          data-testid="value-filter"
-          type="number"
-          value={ numberFilter }
-          onChange={ getNumberFilter }
-        />
-      </label>
-      <button
-        data-testid="button-filter"
-        type="submit"
-      >
-        Filter
+    <div>
+      {columnOptions.length > 0
+        && (
+          <form onSubmit={ submitHandler }>
+            <label htmlFor="column">
+              <select
+                data-testid="column-filter"
+                id="column"
+                value={ columnFilter }
+                onChange={ getColumnFilter }
+              >
+                {
+                  columnOptions.map((option) => (
+                    <option key={ option } value={ option }>{option}</option>
+                  ))
+                }
+              </select>
+            </label>
+            <label htmlFor="comparison">
+              <select
+                data-testid="comparison-filter"
+                id="comparison"
+                value={ comparisonFilter }
+                onChange={ getComparisonFilter }
+              >
+                <option value="maior que">maior que</option>
+                <option value="menor que">menor que</option>
+                <option value="igual a">igual a</option>
+              </select>
+            </label>
+            <label htmlFor="number">
+              <input
+                data-testid="value-filter"
+                type="number"
+                value={ numberFilter }
+                onChange={ getNumberFilter }
+              />
+            </label>
+            <button
+              data-testid="button-filter"
+              type="submit"
+            >
+              Filter
 
-      </button>
-    </form>
+            </button>
+          </form>
+        )}
+    </div>
   );
 }
 
