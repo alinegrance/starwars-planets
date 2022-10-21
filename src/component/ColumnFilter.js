@@ -23,11 +23,15 @@ function ColumnFilter() {
   const [columnFilter, setColumnFilter] = useState('population');
   const [comparisonFilter, setComparisonFilter] = useState('maior que');
   const [numberFilter, setNumberFilter] = useState('0');
-  const [columnOptions, setColumnOptions] = useState(['population',
-    'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
+
+  const {
+    addNewFilter,
+    columnOptions,
+    setColumnOptions,
+    id } = useContext(swContext);
 
   useEffect(() => {
-    setColumnFilter(columnOptions[0] || null);
+    setColumnFilter(columnOptions[0] || '');
   }, [columnOptions]);
 
   const getColumnFilter = ({ target: { value } }) => {
@@ -41,22 +45,15 @@ function ColumnFilter() {
   const getNumberFilter = ({ target: { value } }) => {
     setNumberFilter(value);
   };
-  const {
-    addNewFilter,
-    id } = useContext(swContext);
 
   const submitHandler = (event) => {
     event.preventDefault();
 
-    setColumnOptions((prevState) => {
-      console.log(columnFilter);
-      return prevState.filter((opt) => opt !== columnFilter);
-    });
+    setColumnOptions((prevState) => prevState.filter((opt) => opt !== columnFilter));
 
     addNewFilter(newFilter(id, columnFilter, comparisonFilter, numberFilter));
   };
 
-  console.log(columnOptions.length);
   return (
     <div>
       {columnOptions.length > 0

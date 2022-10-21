@@ -2,7 +2,7 @@ import React from 'react';
 import NameFilter from './NameFilter';
 import ColumnFilter from './ColumnFilter';
 
-function Filters() {
+function FiltersInput() {
   return (
     <div>
       <NameFilter />
@@ -12,4 +12,4 @@ function Filters() {
   );
 }
 
-export default Filters;
+export default FiltersInput;
