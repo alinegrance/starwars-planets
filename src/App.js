@@ -1,18 +1,22 @@
 import React from 'react';
 import './App.css';
-import FiltersInput from './component/Filters';
 import Header from './component/Header';
 import Table from './component/Table';
-import FilterButtons from './component/FilterButtons';
 import SwProvider from './context/SwProvider';
+import ColumnSort from './component/ColumnSort';
+import Filter from './component/Filter';
 
 function App() {
   return (
     <SwProvider>
-      <Header />
-      <FiltersInput />
-      <FilterButtons />
-      <Table />
+      <main className="App">
+        <Header />
+        <div className="Filters flex-row">
+          <Filter />
+          <ColumnSort />
+        </div>
+        <Table />
+      </main>
     </SwProvider>
   );
 }

@@ -11,6 +11,7 @@ function SwProvider({ children }) {
   const [filters, setFilters] = useState([]);
   const [id, setId] = useState(0);
   const [columnOptions, setColumnOptions] = useState(INIT_COLUMN_OPT);
+  const [sort, setSort] = useState({ order: { column: 'population', sort: 'ASC' } });
 
   useEffect(() => {
     async function swApiCall() {
@@ -48,6 +49,10 @@ function SwProvider({ children }) {
     setColumnOptions(INIT_COLUMN_OPT);
   };
 
+  const getSortSetup = (column, sortOpt) => {
+    setSort({ order: { column, sort: sortOpt } });
+  };
+
   const store = useMemo(
     () => ({
       planets,
@@ -60,8 +65,10 @@ function SwProvider({ children }) {
       id,
       clearFilters,
       removeFilter,
+      sort,
+      getSortSetup,
     }),
-    [planets, nameFilter, columnOptions, filters, id],
+    [planets, nameFilter, columnOptions, filters, id, sort],
   );
 
   return (

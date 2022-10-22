@@ -1,7 +1,12 @@
 import React from 'react';
+import '../App.css';
 
 function Header() {
-  return <h1>StarWars Planets</h1>;
+  return (
+    <div>
+      <h1 className="Header">StarWars Planets</h1>
+    </div>
+  );
 }
 
 export default Header;
