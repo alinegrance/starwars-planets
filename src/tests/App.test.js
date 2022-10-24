@@ -1,13 +1,12 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { act } from "react-dom/test-utils";
 import App from '../App';
-
-beforeEach(() => {
-  render(<App/>);
-})
+import apiMock from './apiMock';
 
 describe('Test StarWars page', () => {
   it('Test if page renders with title', () => {
+    render(<App/>);
     const title = screen.getByRole('heading', {
       name: /starwars planets/i
     });
@@ -16,6 +15,7 @@ describe('Test StarWars page', () => {
   });
 
   it('test if filter inputs are rendered', () => {
+    render(<App/>);
     const nameFilterInput = screen.getByPlaceholderText('planet name');
     expect(nameFilterInput).toBeInTheDocument();
 
@@ -35,6 +35,7 @@ describe('Test StarWars page', () => {
   });
 
   it('test if sort inputs are rendered', () => {
+    render(<App/>);
     const columnSortSelect = screen.getByRole('combobox', {
       name: /column/i
     });
@@ -50,4 +51,25 @@ describe('Test StarWars page', () => {
     });
     expect(sortButton).toBeInTheDocument();
   });
+
+  it('test if table is rendered', () => {
+    render(<App/>);
+    const table = screen.getByRole('table');
+    expect(table).toBeInTheDocument();
+  });
+
+  it('test api return', async () => {
+    jest.spyOn(global, 'fetch').mockImplementation(() => 
+      Promise.resolve({
+        json: () => Promise.resolve(apiMock),
+      })
+    );
+    
+    await act(async () => {
+      render(<App/>);
+    })
+
+    const planetList = screen.getAllByTestId('planet-name');
+    global.fetch.mockRestore();
+  })
 });
