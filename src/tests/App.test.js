@@ -64,12 +64,15 @@ describe('Test StarWars page', () => {
         json: () => Promise.resolve(apiMock),
       })
     );
-    
+
     await act(async () => {
       render(<App/>);
     })
 
     const planetList = screen.getAllByTestId('planet-name');
+
+    expect(planetList).toHaveLength(10);
+
     global.fetch.mockRestore();
   })
 });
