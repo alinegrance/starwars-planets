@@ -1,8 +1,9 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { act } from "react-dom/test-utils";
 import App from '../App';
 import apiMock from './apiMock';
+import userEvent from '@testing-library/user-event';
 
 describe('Test StarWars page', () => {
   it('Test if page renders with title', () => {
@@ -70,9 +71,68 @@ describe('Test StarWars page', () => {
     })
 
     const planetList = screen.getAllByTestId('planet-name');
-
     expect(planetList).toHaveLength(10);
 
     global.fetch.mockRestore();
   })
+
+  it('test name filter', async ()=> {
+    jest.spyOn(global, 'fetch').mockImplementation(() => 
+      Promise.resolve({
+        json: () => Promise.resolve(apiMock),
+      })
+    );
+
+    await act(async () => {
+      render(<App/>);
+    });
+
+    const nameFilterInput = screen.getByPlaceholderText('planet name');
+    userEvent.type(nameFilterInput, 'oo');
+
+    const planetFiltered = screen.getAllByTestId('planet-name');
+    expect(planetFiltered).toHaveLength(2);
+
+    global.fetch.mockRestore();
+  })
+
+  it('test filter by column parameter', async() => {
+    jest.spyOn(global, 'fetch').mockImplementation(() => 
+      Promise.resolve({
+        json: () => Promise.resolve(apiMock),
+      })
+    );
+
+    await act(async () => {
+      render(<App/>);
+    });
+
+    const columnFilterSelect = screen.getByTestId('column-filter');
+
+    userEvent.selectOptions(columnFilterSelect, 'population');
+
+    const filterButton = screen.getByRole('button', {
+      name: /filter/i
+    });
+    userEvent.click(filterButton);
+
+    const planetFiltered = screen.getAllByTestId('planet-name');
+    expect(planetFiltered).toHaveLength(8);
+
+    global.fetch.mockRestore();
+  })
+
+  // it('test sort', async () => {
+  //   jest.spyOn(global, 'fetch').mockImplementation(() => 
+  //   Promise.resolve({
+  //     json: () => Promise.resolve(apiMock),
+  //   })
+  // );
+
+  // await act(async () => {
+  //   render(<App/>);
+  // });
+
+  // global.fetch.mockRestore();
+  // })
 });
