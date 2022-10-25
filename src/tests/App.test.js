@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { getNodeText, render, screen } from '@testing-library/react';
 import { act } from "react-dom/test-utils";
 import App from '../App';
 import apiMock from './apiMock';
@@ -116,23 +116,76 @@ describe('Test StarWars page', () => {
     });
     userEvent.click(filterButton);
 
+    const removeAllFiltersBtn = screen.getByRole('button', {
+      name: /remove all filters/i
+    });
+
+    expect(removeAllFiltersBtn).toBeInTheDocument();
+
     const planetFiltered = screen.getAllByTestId('planet-name');
     expect(planetFiltered).toHaveLength(8);
 
+    userEvent.click(removeAllFiltersBtn);
     global.fetch.mockRestore();
   })
 
-  // it('test sort', async () => {
-  //   jest.spyOn(global, 'fetch').mockImplementation(() => 
-  //   Promise.resolve({
-  //     json: () => Promise.resolve(apiMock),
-  //   })
-  // );
+  it('test asc sort', async () => {
+    jest.spyOn(global, 'fetch').mockImplementation(() => 
+    Promise.resolve({
+      json: () => Promise.resolve(apiMock),
+    })
+  );
 
-  // await act(async () => {
-  //   render(<App/>);
-  // });
+  await act(async () => {
+    render(<App/>);
+  });
 
-  // global.fetch.mockRestore();
-  // })
+  const columnSortSelect = screen.getByRole('combobox', {
+    name: /column/i
+  });
+  userEvent.selectOptions(columnSortSelect,'surface_water');
+  
+  const asc = screen.getByText(/asc/i);
+  userEvent.click(asc);
+  
+  const sortButton = screen.getByRole('button', {
+    name: /sort/i
+  });
+  userEvent.click(sortButton);
+
+  const planetSorted = screen.getAllByTestId('planet-name').map(getNodeText);
+  expect(planetSorted[0]).toBe('Bespin');
+
+  global.fetch.mockRestore();
+  });
+
+  it('test desc sort', async () => {
+    jest.spyOn(global, 'fetch').mockImplementation(() => 
+    Promise.resolve({
+      json: () => Promise.resolve(apiMock),
+    })
+  );
+
+  await act(async () => {
+    render(<App/>);
+  });
+
+  const columnSortSelect = screen.getByRole('combobox', {
+    name: /column/i
+  });
+  userEvent.selectOptions(columnSortSelect,'diameter');
+  
+  const desc = screen.getByText(/desc/i);
+  userEvent.click(desc);
+  
+  const sortButton = screen.getByRole('button', {
+    name: /sort/i
+  });
+  userEvent.click(sortButton);
+
+  const planetSorted = screen.getAllByTestId('planet-name').map(getNodeText);
+  expect(planetSorted[9]).toBe('Endor');
+
+  global.fetch.mockRestore();
+  })
 });
